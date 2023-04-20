@@ -119,9 +119,25 @@ df = pd.read_csv('meteorite-landings.csv')
 columns_with_missing_values = get_columns_with_missing_values(df)
 print(columns_with_missing_values)
 
+df.groupby(df['recclass'])['mass'].transform(lambda x: x.fillna(x.mean()))
+df['mass'].isna().sum()
+columns_with_missing_values = get_columns_with_missing_values(df)
+print(columns_with_missing_values)
+
+replace_nan_with_mean_class(df, 'year', 'recclass')
+replace_nan_with_mean_class(df, 'reclat', 'recclass')
+df['reclat'].isna().sum()
+categories, _ = pd.factorize(df['reclat'])
+
+
+
 df.info()
+df['recclass'].unique()
+df.columns
 # number of missing values (NaN) in each column of the DataFrame.
 df.isna().sum()
+df.groupby('recclass') 
+
 
 df.columns
 
