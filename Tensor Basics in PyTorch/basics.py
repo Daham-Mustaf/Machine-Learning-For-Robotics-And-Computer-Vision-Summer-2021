@@ -20,3 +20,25 @@ H = torch.exp(G)
 # Compute the sum of tensor H along the second dimension
 I = torch.sum(H, dim=1)
 
+
+# Gradient Calculation With Autograd
+
+
+# Create a tensor with requires_grad=True to track computation history and enable autograd
+x = torch.tensor([3.0], requires_grad=True)
+
+# Define a function to compute y
+def compute_y(x):
+    y = 2 * x ** 2 + 3 * x + 1
+    return y
+
+# Compute y and assign the result to y
+y = compute_y(x)
+
+# Compute the gradients of y with respect to x
+y.backward()
+
+# Print the gradients of x
+print(x.grad)
+
+
