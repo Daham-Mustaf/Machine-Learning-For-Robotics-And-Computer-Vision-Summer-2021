@@ -28,44 +28,37 @@ def replace_nan_with_mean_class(df: pd.DataFrame, col: str, refcol: str) -> pd.D
 
 def categorical_to_num(df: pd.DataFrame, col: str) -> pd.DataFrame:
     """
-    This function should list all the categories within the given column (col) and
-    assign a category id for each individual category, then for each row:
-    - Replace the category value with the respective category id number
+    This function replaces the categorical data in a given column (col) with numerical ids.
 
     Args:
-        - df (pd.DataFrame): dataframe to change the categorical data to numerical
-        - col (str): column to be changed
+        - df (pd.DataFrame): The input DataFrame.
+        - col (str): The name of the column in which categorical data will be replaced with numerical ids.
 
     Returns:
-        - df (pd.DataFrame): dataframe with the categorical class replaced with categories ids numbers
+        - df (pd.DataFrame): The input DataFrame with categorical data in col replaced with numerical ids.
     """
-    pass
-
+    categories, _ = pd.factorize(df[col])
+    df[col] = categories
     return df
+
 
 def remove_nan_rows(df: pd.DataFrame, col: str) -> pd.DataFrame:
     """
-    This function should list all the nan values within the given column then for each row:
-    - Remove the current row if the column (col) is NaN
+    Removes rows where the specified column has a NaN value.
 
     Args:
-        - df (pd.DataFrame): dataframe to have the NaNs drop
-        - col (str): column in which the NaNs will be removed
+        - df (pd.DataFrame): The input DataFrame.
+        - col (str): The name of the column to check for NaN values.
 
     Returns:
-        - df (pd.DataFrame): dataframe without the rows where the column (col) contains NaN
+        - df (pd.DataFrame): The input DataFrame with rows removed where col has a NaN value.
     """
-    pass
-
+    df = df.dropna(subset=[col])
     return df
 
 def remove_row_within_range(df: pd.DataFrame, col: str, min_val: float, max_val: float) -> pd.DataFrame:
     """
-    This function should remove rows where the column (col) value is not inside a given range (min_val, max_val).
-    For each row:
-    - Check if the column (col) attribute is inside the range:
-        - if is not in range: drop the row
-        - if is in range: keep the row
+    Remove rows where the column (col) value is not inside a given range (min_val, max_val).
 
     Args:
         - df (pd.DataFrame): dataframe that will have the rows removed
@@ -76,9 +69,14 @@ def remove_row_within_range(df: pd.DataFrame, col: str, min_val: float, max_val:
     Returns:
         - df (pd.DataFrame): dataframe without the rows where column (col) is not within range (min_val, max_val)
     """
-    pass
+    # Create a boolean mask where the values in the specified column are within the given range
+    mask = (df[col] >= min_val) & (df[col] <= max_val)
+
+    # Filter the dataframe using the boolean mask
+    df = df[mask]
 
     return df
+
 
 def remap_values(df: pd.DataFrame, col: str, remap_dict: dict) -> pd.DataFrame:
     """
@@ -99,19 +97,18 @@ def remap_values(df: pd.DataFrame, col: str, remap_dict: dict) -> pd.DataFrame:
 
 def drop_column(df: pd.DataFrame, col: str) -> pd.DataFrame:
     """
-    This function drop a given column (col). For each row:
-    - Drop values from the column (col)
+    This function drops a given column (col) from a DataFrame.
 
     Args:
-        - df (pd.DataFrame): dataframe to have the columns removed
-        - col (str): column to be removed
+        - df (pd.DataFrame): The input DataFrame.
+        - col (str): The name of the column to drop.
 
     Returns:
-        - df (pd.DataFrame): dataframe without the given column
+        - df (pd.DataFrame): The input DataFrame with the specified column dropped.
     """
-    pass
-
+    df = df.drop(col, axis=1)
     return df
+
 
 # Dataset read
 df = pd.read_csv('meteorite-landings.csv')
@@ -126,6 +123,8 @@ print(columns_with_missing_values)
 
 replace_nan_with_mean_class(df, 'year', 'recclass')
 replace_nan_with_mean_class(df, 'reclat', 'recclass')
+df['reclat'].isna().sum()
+df.dropna(subset=['reclat'])
 df['reclat'].isna().sum()
 categories, _ = pd.factorize(df['reclat'])
 
